@@ -4,6 +4,9 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/ADG508.c \
+../Src/ADS7816.c \
+../Src/HC138.c \
 ../Src/colormonitor.c \
 ../Src/function.c \
 ../Src/globalVar.c \
@@ -13,6 +16,9 @@ C_SRCS += \
 ../Src/system_stm32f1xx.c 
 
 OBJS += \
+./Src/ADG508.o \
+./Src/ADS7816.o \
+./Src/HC138.o \
 ./Src/colormonitor.o \
 ./Src/function.o \
 ./Src/globalVar.o \
@@ -22,6 +28,9 @@ OBJS += \
 ./Src/system_stm32f1xx.o 
 
 C_DEPS += \
+./Src/ADG508.d \
+./Src/ADS7816.d \
+./Src/HC138.d \
 ./Src/colormonitor.d \
 ./Src/function.d \
 ./Src/globalVar.d \

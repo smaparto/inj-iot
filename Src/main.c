@@ -40,6 +40,7 @@
 #include "GlabalVar.h"
 #include "stm32f1xx_hal.h"
 #include "stm32f10x_type.h"
+#include "ADS7816.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -191,6 +192,10 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
+	int mADS;
+		char h_mADS,l_mADS;
+
+
 #define localecho 1
 	int gosfand;
 	int alaki, i3i;
@@ -229,6 +234,9 @@ int main(void) {
 	MX_TIM1_Init();
 	MX_TIM2_Init();
 	/* USER CODE BEGIN 2 */
+	Init_ADS7816();
+
+
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
@@ -260,6 +268,13 @@ int main(void) {
 
 	send_string(tempasd);
 	ii:
+
+	mADS =read_ADS7816S(2);
+	l_mADS = mADS & 0xff;
+	h_mADS = mADS/256;
+	sprintf(tempasd,"te: %x,%x\r\n",h_mADS,l_mADS);
+	HAL_UART_Transmit(&huart1,tempasd, 10, 100);
+	HAL_Delay(1000);
 
 	send_string("ver1.20180913.0.0");
 	echo"\ndata at 1st page is :%x,%x,%x ,%x",*(vu16*)(addresspage),*(vu16*)(addresspage+2),*(vu16*)(addresspage+4),*(vu16*)(addresspage+6));
