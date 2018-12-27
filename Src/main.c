@@ -41,6 +41,7 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f10x_type.h"
 #include "ADS7816.h"
+#include "Termo.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -193,7 +194,10 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 int main(void) {
 	/* USER CODE BEGIN 1 */
 	int mADS;
-		char h_mADS,l_mADS;
+	char h_mADS,l_mADS;
+	uint16_t temp1,temp2,temp3;
+
+
 
 
 #define localecho 1
@@ -202,6 +206,9 @@ int main(void) {
 	char memactive;
 	/*st float */float cul1, var1, var2a, cul;
 	int kkkk = 200, i;
+
+	char out1[2] ={0x55,0x55};
+	char out2[2] ={0x01,0x01};
 
 	char tempasd[10];
 	u16 stt;
@@ -235,7 +242,7 @@ int main(void) {
 	MX_TIM2_Init();
 	/* USER CODE BEGIN 2 */
 	Init_ADS7816();
-
+	Init_Termo();
 
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
@@ -269,16 +276,54 @@ int main(void) {
 	send_string(tempasd);
 	ii:
 
+
+
+
+
+
+	setChannel_Termo(0);
+	HAL_Delay(220);
+	temp1 = read_Temp();
+
+	setChannel_Termo(1);
+	HAL_Delay(220);
+	temp2 = read_Temp();
+
+	sprintf(tempasd,"termo:%c%d   %c%d\r\n",9,temp1,9,temp2);
+	HAL_UART_Transmit(&huart1,tempasd,30, 500);
+
+
 	mADS =read_ADS7816S(2);
 	l_mADS = mADS & 0xff;
 	h_mADS = mADS/256;
-	sprintf(tempasd,"te: %x,%x\r\n",h_mADS,l_mADS);
+	sprintf(tempasd,"ruller: %x,%x\r\n",h_mADS,l_mADS);
 	HAL_UART_Transmit(&huart1,tempasd, 10, 100);
 	HAL_Delay(1000);
+
+
+	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
+
+
+	while(1){
+
+		HAL_SPI_Transmit(&hspi2, out1, 2, 100);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+		HAL_Delay(1);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+		HAL_Delay(500);
+		HAL_SPI_Transmit(&hspi2, out2, 2, 100);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+		HAL_Delay(1);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+		HAL_Delay(500);
+	}
 
 	send_string("ver1.20180913.0.0");
 	echo"\ndata at 1st page is :%x,%x,%x ,%x",*(vu16*)(addresspage),*(vu16*)(addresspage+2),*(vu16*)(addresspage+4),*(vu16*)(addresspage+6));
 	sendecho;
+
 	/*
 	 delay_ms(400);
 	 int imehdi;
@@ -358,6 +403,9 @@ int main(void) {
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
+
+
+
 
 		/* USER CODE END WHILE */
 		if (mmc_key_active && memactive) {

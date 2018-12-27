@@ -1,5 +1,5 @@
-Src/HC138.o: ../Src/HC138.c \
- D:/21_EclipseWorkSpace/injection_iot/Inc/digitalInput.h \
+Src/max6675.o: ../Src/max6675.c \
+ D:/21_EclipseWorkSpace/injection_iot/Inc/max6675.h \
  D:/21_EclipseWorkSpace/injection_iot/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  D:/21_EclipseWorkSpace/injection_iot/Inc/stm32f1xx_hal_conf.h \
  D:/21_EclipseWorkSpace/injection_iot/Inc/main.h \
@@ -27,7 +27,7 @@ Src/HC138.o: ../Src/HC138.c \
  D:/21_EclipseWorkSpace/injection_iot/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  D:/21_EclipseWorkSpace/injection_iot/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 
-D:/21_EclipseWorkSpace/injection_iot/Inc/digitalInput.h:
+D:/21_EclipseWorkSpace/injection_iot/Inc/max6675.h:
 
 D:/21_EclipseWorkSpace/injection_iot/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 
