@@ -198,8 +198,6 @@ int main(void) {
 	uint16_t temp1,temp2,temp3;
 
 
-
-
 #define localecho 1
 	int gosfand;
 	int alaki, i3i;
@@ -219,9 +217,7 @@ int main(void) {
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
-
 	/* USER CODE BEGIN Init */
-
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -243,20 +239,35 @@ int main(void) {
 	/* USER CODE BEGIN 2 */
 	Init_ADS7816();
 	Init_Termo();
+	HAL_TIM_Base_Start(&htim1);
 
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start_IT(&htim2);
-
+//	HAL_UART_MspInit(&huart1);//aft
 	jtag_Disable();
+  //   NVIC_EnableIRQ(USART1_IRQn);//aft
+//HAL_UART_Receive_IT(&huart1,tempasd,3);
+    // __enable_irq();
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+	__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
+
+
+//__HAL_uart_enable
+//while(1){
+    	// USART1->DR=55;
+    	// HAL_Delay(500);
+
+  //   }
 	stt = 23;
 
 	//send_string("br9600 delay\n");
 	Value = 0;
-	//memload();
-	//farzin FLASH_Unlock();
+	//halmemload();
+	//FLASH_Unlock();
 
 	goto ii;
 	//oftsend_string("step1\n");
@@ -306,7 +317,7 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
 
 
-	while(1){
+	//while(1){
 
 		HAL_SPI_Transmit(&hspi2, out1, 2, 100);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
@@ -318,12 +329,16 @@ int main(void) {
 		HAL_Delay(1);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 		HAL_Delay(500);
-	}
+//	}
 
 	send_string("ver1.20180913.0.0");
-	echo"\ndata at 1st page is :%x,%x,%x ,%x",*(vu16*)(addresspage),*(vu16*)(addresspage+2),*(vu16*)(addresspage+4),*(vu16*)(addresspage+6));
-	sendecho;
 
+    for(i=0;i<100;i++)
+    {
+
+	echo"\ndata at 1st page is :%x",*(vu16*)(addresspage),*(vu16*)(addresspage+(i*2)));
+	sendecho;
+     }
 	/*
 	 delay_ms(400);
 	 int imehdi;
@@ -364,7 +379,7 @@ int main(void) {
 	page = 0;
 	if (marrid != 1) {
 		marrid = 1;
-		defalt();
+		//hal //st defalt();
 	}
 	temp = pass3 ^ 0xa55;
 	mode = 0;
@@ -394,6 +409,7 @@ int main(void) {
 	if (!i19)
 		errorcode = 18;
 
+	colorm();
 	//while(1){RelayToggle1 RelayToggle delay_ms(10);}
 	//farzin sendchar2('a');
 
@@ -403,10 +419,6 @@ int main(void) {
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-
-
-
-
 		/* USER CODE END WHILE */
 		if (mmc_key_active && memactive) {
 			// mmc_key_active=0;
@@ -850,6 +862,8 @@ int main(void) {
 
 }
 
+
+
 /**
  * @brief System Clock Configuration
  * @retval None
@@ -931,7 +945,7 @@ static void MX_TIM1_Init(void) {
 	htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim1.Init.Period = 1000;
 	htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim1.Init.RepetitionCounter = 0;
+	htim1.Init.RepetitionCounter =0;
 	htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 	if (HAL_TIM_Base_Init(&htim1) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
@@ -1106,7 +1120,7 @@ static void MX_USART1_UART_Init(void) {
 static void MX_USART2_UART_Init(void) {
 
 	huart2.Instance = USART2;
-	huart2.Init.BaudRate = 115200;
+	huart2.Init.BaudRate =38400;
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
 	huart2.Init.StopBits = UART_STOPBITS_1;
 	huart2.Init.Parity = UART_PARITY_NONE;

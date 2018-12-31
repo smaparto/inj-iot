@@ -1,20 +1,54 @@
 /*
  * function.c
  *
- *  Created on: ? د? ???? ه‍.ش.
+ *  Created on: ? Ø¯? ???? Ù‡â€�.Ø´.
  *      Author: pr
  */
 
+#include "stm32f1xx_hal.h"
 #include "function.h"
 #include "GlabalVar.h"
 #include "colormonitor.h"
 #include "main.h"
 
-void FLASH_ErasePage(int address){}
-void FLASH_ProgramHalfWord(int address, int Value){}
+
+void fordelay(int i)
+{
+	int d;
+for(d=0;d<i;d++);
+}
+void FLASH_ErasePage(u32 address){
+	__disable_irq();
+	FLASH_PageErase(address);
+	CLEAR_BIT(FLASH->CR,(FLASH_CR_PER));
+	fordelay(500);
+	__enable_irq();
+}
+void FLASH_ProgramHalfWord(u32 address, int data)
+{
+//#define localecho 1
+//	HAL_StatusTypeDef status1;
+
+	__disable_irq();
+//HAL_FLASH_Unlock();
+
+HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD,address,data );
+//	FLASH_Program_HalfWord(address, data);
+
+//HAL_FLASH_Lock();
+//fordelay(1000);
+__enable_irq();
+	//if(status1)echo "error"
+	//	sendecho;
+
+
+}
 
 
 int getkey (void){
+
+
+
 	return 0;
 }
 int getkey2 (void){
@@ -237,6 +271,8 @@ int colorm(void)	//ok1
 {
 	int ffff, j;
 	char i;
+	errorcode=0;//aft
+
 	varselect = 0;
 	picnumber = 0;
 	if (!transmit) {
@@ -249,9 +285,10 @@ int colorm(void)	//ok1
 
 		picpast_flag = 0;
 		picpast_add = 0x18;
-		//if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,407,8); //íÑå ÈÓÊå 1
+		//if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,407,8); //Â�Ã­Ã‘Ã¥ ÃˆÃ“ÃŠÃ¥ 1
 		//  if(errorcode)picpast(35,er_x[state2],er_y[state2],er_x[state2]+er_x_dif,er_y[state2]+er_y_dif,63,6);
-
+		keycode=66;
+		cpp(0, 1, 0, keycode, 0);
 		//makebuf();
 		if (color_refresh < 80)
 			color_refresh++;
@@ -318,7 +355,7 @@ int colorm(void)	//ok1
 				if (state2 < 14)
 					picpast(45, op_x[state2], op_y[state2],
 							op_x[state2] + op_x_dif, op_y[state2] + op_y_dif,
-							402, 3); //íÑå ÈÓÊå 1
+							402, 3); //Â�Ã­Ã‘Ã¥ ÃˆÃ“ÃŠÃ¥ 1
 			}
 			//picpast(35,0,0,15,15,100,100);
 			//picpast(35,0,0,15,15,100,50);
@@ -339,10 +376,10 @@ int colorm(void)	//ok1
 			color2 = GREEN;
 		//textpointer=bufsize+1;
 
-		if (!errorcode)
+		// oft if (!errorcode)
 			cpp(0, 1, 0, keycode, 0);
-		else
-			cpp(0, 1, 0, errorcode, 0);
+		//oft else
+			//oft cpp(0, 1, 0, errorcode, 0);
 
 		//ftemp=receive_data[10];
 		//oft cpp(0,1,1,per,0);
@@ -919,6 +956,7 @@ int colorm(void)	//ok1
 			receive_data[0] = 0;
 		}
 		//halHAL_UART_Transmit_IT(&huart2,"0", 1);//afst
+		USART2->DR=1;
 		//st UDR0=0;
 		//if(!(cheshmak &0xf))
 
@@ -2418,12 +2456,27 @@ void keypross(void)
 }
 
 //=======================================================================================================
+
+void TIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+
+  /* USER CODE END TIM2_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim2);
+  main_timer();
+  /* USER CODE BEGIN TIM2_IRQn 1 */
+
+  /* USER CODE END TIM2_IRQn 1 */
+}
+
+
+
 void TIM1_UP_IRQHandler() {
 	TIM1->SR &= ~(1 << 0); ///reset it flag
 	Value++;
 	//sprintf(tempasd,"%d\n",Value);
 	main_timer();
-
+USART1->DR=52;
 	//send_string(tempasd);
 
 }
@@ -2630,7 +2683,6 @@ void show_var(int page) {
 
 			sprintf(string, "\nvar[%d][%d]= %d", i, j, datain);
 			send_string(string);
-
 			HAL_Delay(1);
 
 		}
@@ -2780,6 +2832,7 @@ void USART2_IRQHandler(void) {
 	if (IIR & UART_FLAG_TXE) {
 		if (bufpointer <= bufsize) {
 			//oftUSART_SendData(USART2, lcdbuf[bufpointer]);
+			USART2->DR=lcdbuf[bufpointer];
 			//halHAL_UART_Transmit(&huart2,lcdbuf[bufpointer], 1,1);
 			bufpointer++;
 			transmit = 1;
@@ -2792,8 +2845,9 @@ void USART2_IRQHandler(void) {
 	}
 
 	if (IIR & UART_FLAG_RXNE) {
-		ch = getkey2();
-		//halUSART_SendData(USART1, ch);
+		//ch = getkey2();
+		ch=USART2->DR;
+		 //hal  USART_SendData(USART1, ch);
 
 		if (ch != 0x55 && ch != 0x54 && !lockkey) {
 			keycode = (((ch >> 3) - 1) << 3) + (ch & 0x07);
@@ -2818,30 +2872,49 @@ void USART2_IRQHandler(void) {
 void USART1_IRQHandler(void) {
 #define localecho 0
 	char ch, string[10];
-	ch = getkey();
-	// USART_SendData(USART1,'t');
+//if(USART1->SR & USART_SR_RXNE){
+//	 (!(USART1->SR & USART_SRFLAG_RXNE));
+//	USART_SR_RXNE
+	//HAL_UART_IRQHandler(&huart1);
+	//USART_ClearITPendingBit(USART1,USART_SR_RXNE);
+	 //}
+	//if(USART_GetITStatus(USART1, UART_IT_RXNE) != RESET)//enter interrupt when STM32 receice data.
+	      {
 
-	if (command_index > 28)
-		command_index = 0;
-	command[command_index] = ch;
-	command_index++;
 
-	if (ch == 0x3b) {
-		echo
-		"%c\n", ch
-		);
-		sendecho
-		command_process();
-		command_index = 0;
+		ch = getkey();
+		ch=USART1->DR;
+			USART1->DR=ch;
+			// USART_SendData(USART1,'t');
 
-	} else {
-		echo
-		" %c", ch
-		);
-		sendecho
+			if (command_index > 28)
+				command_index = 0;
+			command[command_index] = ch;
+			command_index++;
 
-	}
+			if (ch == 0x3b) {
+				echo
+				"%c\n", ch
+				);
+				sendecho
+				command_process();
+				command_index = 0;
 
+			} else {
+				echo
+				" %c", ch
+				);
+				sendecho
+
+			}
+
+		//	USART_ReceiveData(huart1);
+		//	 huart1.RxState = HAL_UART_STATE_READY;
+//HAL_UART_IRQHandler(&huart1);
+
+//USART_ClearITPendingBit(&h huart->RxState = HAL_UART_STATE_READY;uart1, UART_IT_RXNE);
+	        // USART_Temp_Data = (unsigned char) USART_ReceiveData(USART1); //receive a char
+	      }
 }
 //====================
 
@@ -3037,9 +3110,7 @@ u16 get_var(u32 var_address) {
 	u32 address, end_address, strat_address;
 	char string[150];
 	address = addresspage + 0xc00 - 8; // end of page 3
-	echo
-	"\n get_var#1 :var_page_address= %x", address
-	);
+	echo"\n get_var#1 :var_page_address= %x", address);
 	sendecho
 	HAL_FLASH_Unlock();
 	if (*(vu16*) (addresspage + 0xc00 - 8) == 0xffff
@@ -3072,7 +3143,7 @@ u16 get_var(u32 var_address) {
 				//sprintf(string,"\n address=%x data=%d address=%d ",end_address,*(vu16*)(address+2),*(vu16*)(address));
 				//send_string(string);
 				echo
-				"\n get_var #2:return word address= %x", address
+				"\n get_var #4:return word address= %x", address
 				);
 				sendecho
 
@@ -3088,8 +3159,7 @@ u16 get_var(u32 var_address) {
 	//      send_string(string);
 
 	address = var_page_address + (2 * (var_address + 1));
-	echo
-	"\n get_var :return word address= %x", address
+	echo"\n get_var :return word address= %x", address
 	);
 	sendecho
 	return *(vu16*) (address);
@@ -3104,19 +3174,19 @@ void memload(void)	// var2=eeprom or var2=default
 	u32 address;
 	findvalidpage(); // to find maxcounter
 	echo
-	"\n memload:findvalidpage :var_page_address= %x", var_page_address
+	"\n memload#1:findvalidpage :var_page_address= %x", var_page_address
 	);
 	sendecho
 	if (var_page_address == 0xffffffff) {
 		sprintf(string,
-				"\n memload:variables set to defualt and write to address = %x  ",
+				"\n memload#2:variables set to defualt and write to address = %x  ",
 				var_page_address);
 		send_string(string);
 		var_page_address = addresspage; //aft-VER1 . OK
 		defalt();
-		send_string("1");
+		send_string("#1");
 		vartomem(0);
-		send_string("2");
+		send_string("#2");
 	} else {
 
 		address = var_page_address + 2;
@@ -3124,7 +3194,7 @@ void memload(void)	// var2=eeprom or var2=default
 			for (j = 0; j < var2j; j++) {
 
 				echo
-				"\n memload:not fffffffh :var_page_address= %x", var_page_address
+				"\n memload#:not fffffffh :var_page_address= %x", var_page_address
 				);
 				sendecho
 				address = address + 2;

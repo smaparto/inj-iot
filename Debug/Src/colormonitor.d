@@ -1,4 +1,4 @@
 Src/colormonitor.o: ../Src/colormonitor.c \
- D:/21_EclipseWorkSpace/injection_iot/Inc/colormonitor.h
+ E:/Project1/injection_st/injection_iot1/Inc/colormonitor.h
 
-D:/21_EclipseWorkSpace/injection_iot/Inc/colormonitor.h:
+E:/Project1/injection_st/injection_iot1/Inc/colormonitor.h:
