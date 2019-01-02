@@ -26,6 +26,7 @@ Src/main.o: ../Src/main.c \
  E:/Project1/injection_st/injection_iot1/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  E:/Project1/injection_st/injection_iot1/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  E:/Project1/injection_st/injection_iot1/Inc/stm32f10x_type.h \
+ E:/Project1/injection_st/injection_iot1/Inc/colormonitor.h \
  E:/Project1/injection_st/injection_iot1/Inc/GlabalVar.h \
  E:/Project1/injection_st/injection_iot1/Inc/stm32f10x_type.h \
  E:/Project1/injection_st/injection_iot1/Inc/ADS7816.h \
@@ -84,6 +85,8 @@ E:/Project1/injection_st/injection_iot1/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1
 E:/Project1/injection_st/injection_iot1/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 
 E:/Project1/injection_st/injection_iot1/Inc/stm32f10x_type.h:
+
+E:/Project1/injection_st/injection_iot1/Inc/colormonitor.h:
 
 E:/Project1/injection_st/injection_iot1/Inc/GlabalVar.h:
 

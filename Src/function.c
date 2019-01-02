@@ -10,7 +10,35 @@
 #include "GlabalVar.h"
 #include "colormonitor.h"
 #include "main.h"
+#include "stdio.h"
+void ftoa(float num, char point,  char* strp) {
+	int n;
+	char j=0,i,tempstr[20];
+	num = num * pow(10, point);
+	n = num;
 
+	i=0;
+do{
+
+	tempstr[i]=(n%10)+48;
+	n=n/10;
+	i++;
+
+
+
+
+}while(n);
+
+for(;i>0;i--)
+{
+	if(i==point){strp[j]='.';j++;}
+	strp[j]=tempstr[i-1];
+	j++;
+}
+strp[j]=0;
+
+
+}
 
 void fordelay(int i)
 {
@@ -267,7 +295,7 @@ void cond(void)	//ok1
 {
 }
 
-int colorm(void)	//ok1
+void colorm(void)	//ok1
 {
 	int ffff, j;
 	char i;
@@ -283,12 +311,13 @@ int colorm(void)	//ok1
 		textpointer = 0;
 		//cheshmak^=1;
 
+
 		picpast_flag = 0;
 		picpast_add = 0x18;
 		//if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,407,8); //Â�Ã­Ã‘Ã¥ ÃˆÃ“ÃŠÃ¥ 1
 		//  if(errorcode)picpast(35,er_x[state2],er_y[state2],er_x[state2]+er_x_dif,er_y[state2]+er_y_dif,63,6);
-		keycode=66;
-		cpp(0, 1, 0, keycode, 0);
+		//keycode=66;
+	//	cpp(0, 1, 0, keycodelog, 0);
 		//makebuf();
 		if (color_refresh < 80)
 			color_refresh++;
@@ -370,21 +399,25 @@ int colorm(void)	//ok1
 		color1 = BLACK;
 		color1 = 0;
 
-		if (cheshmak & 4)
+		if (cheshmak & 1)
 			color2 = RED;
 		else
 			color2 = GREEN;
 		//textpointer=bufsize+1;
 
 		// oft if (!errorcode)
-			cpp(0, 1, 0, keycode, 0);
+
+
+		cpp(0, 1, 0,22.3, 1);
 		//oft else
 			//oft cpp(0, 1, 0, errorcode, 0);
 
 		//ftemp=receive_data[10];
-		//oft cpp(0,1,1,per,0);
-		cpp(0, 1, 1, secbase, 0);
+		 cpp(0,1,1,per,0);
+		//	USART1->DR=timebase;
+
 		cpp(0, 1, 2, speed, 0);
+	//	cpp(0, 1, 2, 66, 0);
 		//cpp(0,1,2,page,0);
 		//if(((ruler1+31)>=ruler1p6))cpp(0,1,1,1,0);else cpp(0,1,1,1,0);
 		//cpp(0,1,1,page,0);
@@ -399,7 +432,8 @@ int colorm(void)	//ok1
 		//    else putnumber(0,2,timer,0);
 
 		ftemp = timemax;
-		cpp(1, 0, 3, ftemp / 10, 1);
+//oft		cpp(1, 0, 3, ftemp / 10, 1);
+		cpp(1, 0, 3, 22.5, 1);
 
 		if (!hitreal) {
 			if (var[8][0] < 40)
@@ -436,7 +470,8 @@ int colorm(void)	//ok1
 
 		if (state2 == 4 || state2 == 3 || state2 == 5) {
 			ftemp = ritime;
-			cpp(1, 8, 8, ftemp / 10, 1);
+			 cpp(1, 8, 8, ftemp / 10, 1);
+			// cpp(1, 8, 8, 22.3, 1);
 		} else if (state2 == 14) {
 			ftemp = timefull;
 			cpp(1, 8, 8, ftemp / 10, 1);
@@ -1909,7 +1944,14 @@ void keypross(void)
 
 {
 	//number
+#define localecho 0
 
+	//if(keycode && localecho){
+
+
+	echo"keycode=%d",keycode);
+				sendecho
+	//}
 	number = 10;
 	if (keycode == 18) {
 		number = 1;/* //streadflag=0;/* //stTCCR0=0x00;*/
@@ -2257,7 +2299,7 @@ void keypross(void)
 
 	}
 	if (keycode == 7) {
-		if (semiauto || automatic && !state)
+		if (semiauto || (automatic && !state))
 			auto3 = 1;
 	}		//r26
 
@@ -2480,7 +2522,7 @@ USART1->DR=52;
 	//send_string(tempasd);
 
 }
-/*interrupt [TIM1_COMPA]*/void main_timer(void) {
+/*interrupt */void main_timer(void) {
 	int temppp;
 
 	//st   while ((ADCSRA & 0x10)==0);
@@ -2546,6 +2588,8 @@ USART1->DR=52;
 	alaki2--;
 	//  if(timebase==100){if(timestart)totaltime++;secbase++;oiltime++;ritime1++; ritime++;timebase=0;if(timer)timer--;if(timer2)timer2--;if(timer1>1)timer1--;}
 	if (timebase == 100) {
+
+		//USART1->DR=secbase;
 		if (brightcun)
 			brightcun--;
 		cheshmak++;
@@ -2826,8 +2870,9 @@ void command_process(void) {
 	}
 }
 void USART2_IRQHandler(void) {
+#define localecho 0
 	volatile unsigned int IIR;
-	char ch;
+	unsigned char ch;
 	IIR = USART2->SR;
 	if (IIR & UART_FLAG_TXE) {
 		if (bufpointer <= bufsize) {
@@ -2846,15 +2891,22 @@ void USART2_IRQHandler(void) {
 
 	if (IIR & UART_FLAG_RXNE) {
 		//ch = getkey2();
-		ch=USART2->DR;
+
+         ch=USART2->DR;
+//     	 USART1->DR=ch;
+
 		 //hal  USART_SendData(USART1, ch);
 
 		if (ch != 0x55 && ch != 0x54 && !lockkey) {
 			keycode = (((ch >> 3) - 1) << 3) + (ch & 0x07);
+			echo"keycode=%d",keycode);
+			sendecho
 			lockkey = 1;
+			keycodelog=keycode;
 			keypress = 1;
 			beep = 1;
 			beepcounter = 10;
+		//if(localecho)USART1->DR=keycode;
 		}
 
 		if (ch == 0x54) {                //ON PRESS

@@ -37,11 +37,14 @@
  */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "colormonitor.h"
+
 #include "GlabalVar.h"
 #include "stm32f1xx_hal.h"
 #include "stm32f10x_type.h"
 #include "ADS7816.h"
 #include "Termo.h"
+#include "stdio.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -70,7 +73,7 @@ bool lockkey, lockkey1, keypress, refresh, numberchange, action, automode,
 
 finish, timeflag, autokey2, refresh2, ehteyatkey = 0, semiauto2, auto3,
 mmc_key_active;
-char temprecive, imagekey, timefull, hitreal, keywait;
+char temprecive, imagekey, timefull, hitreal, keywait,keycodelog;
 unsigned char perv1, perv2, perv3, perv4, perv5, perv6, perv7, perv8, perv9,
 perv10, perv11, perv12, perv13, perv14, perv19;
 unsigned char speedehteyat, speedv1, speedv2, speedv3, speedv4, speedv5,
@@ -1002,9 +1005,9 @@ static void MX_TIM2_Init(void) {
 	htim2.Instance = TIM2;
 	htim2.Init.Prescaler = 8000;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim2.Init.Period = 1000;
+	htim2.Init.Period = 45;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
 	if (HAL_TIM_Base_Init(&htim2) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}

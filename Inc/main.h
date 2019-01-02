@@ -268,7 +268,7 @@ extern bool  lockkey, lockkey1, keypress, refresh, numberchange, action,
 
 automode, finish, timeflag, autokey2, refresh2, ehteyatkey, semiauto2,
 auto3, mmc_key_active;
-extern char temprecive, imagekey, timefull, hitreal, keywait;
+extern char temprecive, imagekey, timefull, hitreal, keywait,keycodelog;
 extern unsigned char perv1, perv2, perv3, perv4, perv5, perv6, perv7, perv8,
 perv9, perv10, perv11, perv12, perv13, perv14, perv19;
 extern unsigned char speedehteyat, speedv1, speedv2, speedv3, speedv4, speedv5,

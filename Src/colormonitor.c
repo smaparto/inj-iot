@@ -1,10 +1,14 @@
 //================variables
 #include "colormonitor.h"
 #include "math.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include "float.h"
+#include "function.h"
 
 unsigned int picnumber, bufpointer, bufsize, textpointer, itemp, maxbufsize = 0,
 		brightcun=1000;
-float ftemp;
+float ftemp, old[97];//aft1 old was int and change to float to test cpp opration
 
 unsigned char str[20] = "mehdi";
 unsigned int color1, color2 = 0xf801;
@@ -12,7 +16,9 @@ unsigned char lcdbuf[550], picbuf[300], transmit = 1, varselect, cheshmak,
 		bright = 0x40, oldbright = 0, picpast_add = 0x0b, lcdbus, timebase2,
 		oldpageco, receive_data[18], r_d_pointer;
 
-unsigned int key_y, key_x, old[97], oldc[96], x_sine = 0, y_sine = 0, x2_sine =
+
+unsigned int
+key_y, key_x,  oldc[96], x_sine = 0, y_sine = 0, x2_sine =
 		15, y2_sine = 15,
 
 x_dis = 100, y_dis = 100, x_dis_shift = 150, y_dis_shift = 30, picpast_flag,
@@ -66,15 +72,6 @@ const unsigned int all_page_key[] = { 0, 0, 400, 280, 1, 0, 280, 400, 480, 2,
 int touch_key;
 
 //==================functions=============
-void ftoa(float num, char point, unsigned char* strp) {
-	int n;
-	num = num * pow(10, point);
-	n = num;
-	num = n;
-	sprintf(strp, "%f", num);
-	//send_string(strp);
-
-}
 
 void picpast(int picturen, int x1, int y1, int sizex, int sizey, int x2, int y2) {
 	if (!picnumber) {
@@ -180,7 +177,8 @@ void pageid(char page) {
 
 void lcd_beep(char time) //time*40 msec beep
 {
-
+if(0)
+{
 	lcdbuf[bufsize] = 0xa5;
 	bufsize++;
 	lcdbuf[bufsize] = 0x5a;
@@ -193,7 +191,7 @@ void lcd_beep(char time) //time*40 msec beep
 	bufsize++;
 	lcdbuf[bufsize] = time;
 	bufsize++;
-
+}
 }
 
 void brightness(char page) {
@@ -242,10 +240,18 @@ void puttext(unsigned char x, int textbox, char *strm) {
 void putnumber(unsigned char x, int textbox, float num, char point) {
 	int i = 0, len;
 	unsigned char strp[20];
+
+
+
+
+
+
+
+
 	len = x;
 	if (point < 7) {
 
-		ftoa(num, point, strp);
+		ftoa(num, point, strp);                   // copy str to ster p max len is strl[textbox]
 		while (strp[i] != 0 && str[x + i] != 0) {
 			str[x + i] = strp[i];
 			i++;
@@ -262,6 +268,9 @@ void putnumber(unsigned char x, int textbox, float num, char point) {
 		}
 
 	}
+
+
+
 
 }
 void settext(int textbox, unsigned char textsize, int textcolor, int x, int y,
@@ -388,7 +397,7 @@ void setcolor(int textbox, int textcolor) {
 
 }
 
-void printl(int textbox, char *str) {
+void printl(int textbox,  char *str) {
 	int i;
 	// bufsize+=strlen(str);
 
@@ -417,6 +426,14 @@ void printl(int textbox, char *str) {
 
 void cpp(unsigned char l1, unsigned char l2, int textbox, float num, char point) {
 
+	//aft1 old was int and change to float to test cpp opration
+
+	/*char teststr[20];
+
+	itoa((int)num,teststr,10);
+	if(num==23)send_string(teststr);
+	    	fordelay(1000);
+*/
 	if (bufsize < 600) {
 		if (l1 == l2)
 
@@ -434,14 +451,19 @@ void cpp(unsigned char l1, unsigned char l2, int textbox, float num, char point)
 			}
 		}
 
-		if (old[textbox] != num) {
+
+
+		if (old[textbox] != num)
+		{
 
 			cleart(textbox);
-			putnumber(0, textbox, num, point);
-
+			if(!testmode)putnumber(0, textbox, num, point);
+            if(testmode)putnumber(0, textbox, textbox, point);
 			printl(textbox, str);
-
 			old[textbox] = num;
+
+
+
 		}
 	}
 }
@@ -537,7 +559,7 @@ void setlcd2(void) {
 
  picpast_flag=0;
  picpast_add=0x18;
- //if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,407,8); //íÑå ÈÓÊå 1
+ //if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,407,8); //ï¿½Ã­Ã‘Ã¥ ÃˆÃ“ÃŠÃ¥ 1
  //  if(errorcode)picpast(35,er_x[state2],er_y[state2],er_x[state2]+er_x_dif,er_y[state2]+er_y_dif,63,6);
 
  //makebuf();
@@ -597,7 +619,7 @@ void setlcd2(void) {
  picpast_add=0x18;
  if(errorcode)picpast(46,er_x[errorcode],er_y[errorcode],er_x[errorcode]+er_x_dif,er_y[errorcode]+er_y_dif,402,3);
  else{
- if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,402,3); //íÑå ÈÓÊå 1
+ if(state2<14) picpast(45,op_x[state2],op_y[state2],op_x[state2]+op_x_dif,op_y[state2]+op_y_dif,402,3); //ï¿½Ã­Ã‘Ã¥ ÃˆÃ“ÃŠÃ¥ 1
  }
  //picpast(35,0,0,15,15,100,100);
  //picpast(35,0,0,15,15,100,50);
