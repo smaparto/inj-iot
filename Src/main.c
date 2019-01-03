@@ -258,8 +258,6 @@ int main(void) {
 	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
 	__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
 	MX_SPI2_Init();
-
-
 //__HAL_uart_enable
 //while(1){
     	// USART1->DR=55;
