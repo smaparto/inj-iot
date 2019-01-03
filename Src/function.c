@@ -11,34 +11,7 @@
 #include "colormonitor.h"
 #include "main.h"
 #include "stdio.h"
-void ftoa(float num, char point,  char* strp) {
-	int n;
-	char j=0,i,tempstr[20];
-	num = num * pow(10, point);
-	n = num;
 
-	i=0;
-do{
-
-	tempstr[i]=(n%10)+48;
-	n=n/10;
-	i++;
-
-
-
-
-}while(n);
-
-for(;i>0;i--)
-{
-	if(i==point){strp[j]='.';j++;}
-	strp[j]=tempstr[i-1];
-	j++;
-}
-strp[j]=0;
-
-
-}
 
 void fordelay(int i)
 {
@@ -1948,7 +1921,10 @@ void keypross(void)
 
 	//if(keycode && localecho){
 
+	if (keycode != 7) {
 
+						brightcun = 1000;
+					}
 	echo"keycode=%d",keycode);
 				sendecho
 	//}

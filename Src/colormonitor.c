@@ -72,7 +72,34 @@ const unsigned int all_page_key[] = { 0, 0, 400, 280, 1, 0, 280, 400, 480, 2,
 int touch_key;
 
 //==================functions=============
+void ftoa(float num, char point,  char* strp) {
+	int n;
+	char j=0,i,tempstr[20];
+	num = num * pow(10, point);
+	n = num;
 
+	i=0;
+do{
+
+	tempstr[i]=(n%10)+48;
+	n=n/10;
+	i++;
+
+
+
+
+}while(n);
+
+for(;i>0;i--)
+{
+	if(i==point){strp[j]='.';j++;}
+	strp[j]=tempstr[i-1];
+	j++;
+}
+strp[j]=0;
+
+
+}
 void picpast(int picturen, int x1, int y1, int sizex, int sizey, int x2, int y2) {
 	if (!picnumber) {
 		picbuf[0] = 0xa5;
@@ -194,7 +221,7 @@ if(0)
 }
 }
 
-void brightness(char page) {
+void brightness(char bright) {
 	lcdbuf[bufsize] = 0xa5;
 	bufsize++;
 	lcdbuf[bufsize] = 0x5a;
@@ -205,7 +232,7 @@ void brightness(char page) {
 	bufsize++;
 	lcdbuf[bufsize] = 0x01;
 	bufsize++;
-	lcdbuf[bufsize] = page;
+	lcdbuf[bufsize] = bright;
 	bufsize++;
 
 }
