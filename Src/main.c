@@ -209,9 +209,9 @@ int main(void) {
 	int kkkk = 200, i;
 
 	char out1[2] ={0x55,0x55};
-	char out2[2] ={0x01,0x01};
+	char out2[2] ={0xaa,0xaa};
 
-	char tempasd[10];
+	char tempasd[30];
 	u16 stt;
 	u32 Address = 0x0801040f;
 	/* USER CODE END 1 */
@@ -230,7 +230,7 @@ int main(void) {
 
 	/* USER CODE END SysInit */
 
-	/* Initialize all configured peripherals */
+	/* Initialize all configured peripherals*/
 	MX_GPIO_Init();
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
@@ -239,7 +239,7 @@ int main(void) {
 	MX_TIM3_Init();
 	MX_TIM1_Init();
 	MX_TIM2_Init();
-	/* USER CODE BEGIN 2 */
+	/* USER CODE BEGIN 2*/
 	Init_ADS7816();
 	Init_Termo();
 	HAL_TIM_Base_Start(&htim1);
@@ -249,11 +249,9 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start_IT(&htim1);
 	HAL_TIM_Base_Start_IT(&htim2);
-//	HAL_UART_MspInit(&huart1);//aft
+
 	jtag_Disable();
-  //   NVIC_EnableIRQ(USART1_IRQn);//aft
-//HAL_UART_Receive_IT(&huart1,tempasd,3);
-    // __enable_irq();
+
 	__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
 	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
 	__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
@@ -301,8 +299,7 @@ int main(void) {
 	setChannel_Termo(1);
 	HAL_Delay(220);
 	temp2 = read_Temp();
-
-	sprintf(tempasd,"termo:%c%d   %c%d\r\n",9,temp1,9,temp2);
+ sprintf(tempasd,"termo:%c%d   %c%d\r\n",9,temp1,9,temp2);
 	HAL_UART_Transmit(&huart1,tempasd,30, 500);
 
 
@@ -319,7 +316,7 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
 
 
-	//while(1){
+
 
 		HAL_SPI_Transmit(&hspi2, out1, 2, 100);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
@@ -331,7 +328,6 @@ int main(void) {
 		HAL_Delay(1);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 		HAL_Delay(500);
-//	}
 
 	send_string("ver1.20180913.0.0");
 

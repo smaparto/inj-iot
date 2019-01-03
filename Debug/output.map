@@ -6190,7 +6190,7 @@ LOAD e:/program files/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.16.0.201
                 0x00000dd9       0x1d e:/program files/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.16.0.201807130628/tools/compiler/bin/../lib/gcc/arm-none-eabi/7.2.1/thumb/v7-m/crtn.o
 OUTPUT(injection_iot.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x3cdc2
+.debug_info     0x00000000    0x3cdb2
  .debug_info    0x00000000     0x20d9 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
  .debug_info    0x000020d9     0x25a8 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
  .debug_info    0x00004681     0x2147 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
@@ -6210,12 +6210,12 @@ OUTPUT(injection_iot.elf elf32-littlearm)
  .debug_info    0x000258a5     0x1623 Src/colormonitor.o
  .debug_info    0x00026ec8     0x61d9 Src/function.o
  .debug_info    0x0002d0a1     0x23ab Src/globalVar.o
- .debug_info    0x0002f44c     0x4f57 Src/main.o
- .debug_info    0x000343a3     0x1de9 Src/max6675.o
- .debug_info    0x0003618c     0x2c80 Src/stm32f1xx_hal_msp.o
- .debug_info    0x00038e0c     0x224c Src/stm32f1xx_it.o
- .debug_info    0x0003b058     0x1d48 Src/system_stm32f1xx.o
- .debug_info    0x0003cda0       0x22 startup/startup_stm32f103xb.o
+ .debug_info    0x0002f44c     0x4f47 Src/main.o
+ .debug_info    0x00034393     0x1de9 Src/max6675.o
+ .debug_info    0x0003617c     0x2c80 Src/stm32f1xx_hal_msp.o
+ .debug_info    0x00038dfc     0x224c Src/stm32f1xx_it.o
+ .debug_info    0x0003b048     0x1d48 Src/system_stm32f1xx.o
+ .debug_info    0x0003cd90       0x22 startup/startup_stm32f103xb.o
 
 .debug_abbrev   0x00000000     0x4a43
  .debug_abbrev  0x00000000      0x339 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
